@@ -32,7 +32,7 @@ class JumioMobileSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Pl
             channel.setMethodCallHandler(instance)
             registrar.addActivityResultListener(instance)
             registrar.addRequestPermissionsResultListener(instance)
-            instance.modules.forEach { it.bindToActivity(registrar.activity()) }
+            instance.modules.forEach { registrar.activity()?.let(it::bindToActivity) }
         }
     }
 
@@ -72,7 +72,7 @@ class JumioMobileSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Pl
         return results.any { it }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>?, grantResults: IntArray?): Boolean {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray): Boolean {
         val results = modules.map { it.handlePermissionResult(requestCode, permissions, grantResults) }
         return results.any { it }
     }
